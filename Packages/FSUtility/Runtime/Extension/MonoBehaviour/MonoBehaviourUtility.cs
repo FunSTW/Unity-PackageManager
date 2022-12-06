@@ -1,16 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace FunS.Utility
 {
-    public static class MonoBehaviourExtension
+    public static class MonoBehaviourUtility
     {
         #region Transform
-        public static void LocalReset(this Transform transform)
+        public static void ResetLocal(this Transform transform)
         {
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
+            transform.localScale = Vector3.one;
+        }
+
+        public static void ResetGlobal(this Transform transform)
+        {
+            transform.position = Vector3.zero;
+            transform.rotation = Quaternion.identity;
             transform.localScale = Vector3.one;
         }
 
@@ -22,13 +27,13 @@ namespace FunS.Utility
 
         #region Camera
         /// <summary>
-        /// Get Gaze Angle(without Acos)
+        /// Get gazing target angle without Acos.
         /// </summary>
-        /// <returns>1 Face, -1 Back</returns>
-        public static float FastGetGazeAngle(this Transform camera, Transform lookingAt)
+        /// <returns> -1(Back) ~ 0(Side) ~ 1(Front)</returns>
+        public static float FastGetGazeAngle(this Transform camera, Transform gazingTarget)
         {
-            Vector3 targetDir = (lookingAt.position - camera.position).normalized;
-            return MathUtility.FastGetGazeAngle(camera.forward, targetDir);
+            Vector3 dir = (gazingTarget.position - camera.position).normalized;
+            return camera.forward.FastGetAngle(dir);
         }
         #endregion
 
