@@ -155,8 +155,8 @@
       },
       "url": "https://packages.unity.com"
     },
-    "tw.funs.util": {
-      "version": "file:FSMonoExtension",
+    "tw.funs.utility": {
+      "version": "file:FSUtility",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}

@@ -1,10 +1,10 @@
 {
   "author": "FunS",
-  "description": "Extension library for Unity.",
-  "displayName": "FSUtil",
+  "description": "Utility for Unity.",
+  "displayName": "FSUtility",
   "keywords": [ "unity" ],
   "license": "MIT",
-  "name": "tw.funs.util",
+  "name": "tw.funs.utility",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FunSTW/Unity-PackageManager.git"
