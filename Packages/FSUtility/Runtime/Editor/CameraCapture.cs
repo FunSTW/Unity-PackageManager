@@ -32,6 +32,9 @@ namespace FunS.Utility.Editor
         public ImageCubeSize imageCubeSize = ImageCubeSize._512;
 
         private string Name => $"{name}_{DateTime.Now.ToString(data)}";
+        private bool IsGammaSpace => PlayerSettings.colorSpace == ColorSpace.Gamma;
+        //For gamma correction color distortion.
+        private TextureFormat OutputTempTextureFormat => IsGammaSpace ? TextureFormat.RGB24 : TextureFormat.RGB48;
 
         private string Message;
 
@@ -93,6 +96,17 @@ namespace FunS.Utility.Editor
 
             if (!tex) return;
 
+            if (!IsGammaSpace)
+            {
+                var colors = tex.GetPixels();
+                for (int i = 0; i < colors.Length; i++)
+                {
+                    colors[i] = colors[i].gamma;
+                }
+                tex.SetPixels(colors);
+                tex.Apply();
+            }
+
             string outName = Name;
             string relativePath = $"{outName}.{Enum.GetName(typeof(ImageType), imageType)}";
             string assetRelativePath = $"Assets/{relativePath}";
@@ -139,14 +153,14 @@ namespace FunS.Utility.Editor
 
         private Texture2D RenderTexture2D(Camera mCamera, int mWidth, int mHeight)
         {
-            RenderTexture rt = new RenderTexture(mWidth, mHeight, 0, RenderTextureFormat.Default);
+            RenderTexture rt = new RenderTexture(mWidth, mHeight, 0, RenderTextureFormat.DefaultHDR);
             rt.antiAliasing = antiAliasing;
 
             mCamera.targetTexture = rt;
             mCamera.Render();
 
             RenderTexture.active = rt;
-            Texture2D output = new Texture2D(mWidth, mHeight, TextureFormat.RGB24, false);
+            Texture2D output = new Texture2D(mWidth, mHeight, OutputTempTextureFormat, false);
             output.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
             output.Apply();
             mCamera.targetTexture = null;
@@ -170,7 +184,7 @@ namespace FunS.Utility.Editor
             cubemapRt.ConvertToEquirect(equirectRt, Camera.MonoOrStereoscopicEye.Mono);
 
             RenderTexture.active = equirectRt;
-            Texture2D output = new Texture2D(equirectRt.width, equirectRt.height, TextureFormat.RGB24, false);
+            Texture2D output = new Texture2D(equirectRt.width, equirectRt.height, OutputTempTextureFormat, false);
             output.ReadPixels(new Rect(0, 0, equirectRt.width, equirectRt.height), 0, 0);
             output.Apply();
             RenderTexture.active = null;
