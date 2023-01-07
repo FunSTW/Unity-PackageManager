@@ -94,18 +94,7 @@ namespace FunS.Utility.Editor
             if (!renderCubemap) tex = RenderTexture2D(camera, Mathf.RoundToInt(camera.pixelWidth * renderScale), Mathf.RoundToInt(camera.pixelHeight * renderScale));
             else tex = RenderCubemap(camera, (int)imageCubeSize);
 
-            if (!tex) return;
-
-            if (!IsGammaSpace)
-            {
-                var colors = tex.GetPixels();
-                for (int i = 0; i < colors.Length; i++)
-                {
-                    colors[i] = colors[i].gamma;
-                }
-                tex.SetPixels(colors);
-                tex.Apply();
-            }
+            if (!IsGammaSpace) tex.ToGamma();
 
             string outName = Name;
             string relativePath = $"{outName}.{Enum.GetName(typeof(ImageType), imageType)}";
