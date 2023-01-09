@@ -2,7 +2,7 @@
 (๑•̀ㅂ•́)و✧
 
 # Getting started
-<img src="\GithubPage\Home\01.png" width="100%"> 
+<img src=".\GithubPage\Home\01.png" width="100%"> 
 
 # Table of Contents
 - [FSUtility](\GithubPage\CameraCapture)

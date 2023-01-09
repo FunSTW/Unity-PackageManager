@@ -2,7 +2,7 @@
 (๑•̀ㅂ•́)و✧
 
 # Getting started
-<img src="\01.png" width="100%"> 
+<img src="01.png" width="100%"> 
 
 # Table of Contents
 - [MenuItem](#MenuItem)
@@ -12,4 +12,4 @@
 # MenuItem
 ## Camera
 ### Camera Capture
-<img src="\02.png" width="100%"> 
+<img src="02.png" width="100%"> 
