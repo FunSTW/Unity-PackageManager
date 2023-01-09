@@ -33,10 +33,29 @@ namespace FunS.Utility.Editor
 
         private string Name => $"{name}_{DateTime.Now.ToString(data)}";
         private bool IsGammaSpace => PlayerSettings.colorSpace == ColorSpace.Gamma;
+
         //For gamma correction color distortion.
-        private TextureFormat OutputTempTextureFormat => IsGammaSpace ? TextureFormat.RGBA32 : TextureFormat.RGBA64;
+        private TextureFormat OutputTempTextureFormat
+        {
+            get
+            {
+                bool supportRGBA64 = SystemInfo.IsFormatSupported(UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_UNorm, UnityEngine.Experimental.Rendering.FormatUsage.GetPixels);
+
+                if (!IsGammaSpace && !supportRGBA64)
+                {
+                    ErrorMessage =
+                        "You are using linear color space to capture, the image will Gamma corrected, " +
+                        "But Unity 2020.3 and below do not support ReadPixels in TextureFormat.RGBA64, " +
+                        "This will distort the color of the image during gamma correction. " +
+                        "(https://forum.unity.com/threads/screenshot-encoding-very-dark-in-linear-color-space.865147/#post-8712648)";
+                }
+
+                return (IsGammaSpace || !supportRGBA64) ? TextureFormat.RGBA32 : TextureFormat.RGBA64;
+            }
+        }
 
         private string Message;
+        private string ErrorMessage;
 
         [MenuItem("CONTEXT/Camera/Capture To Image", priority = 500)]
         private static void CaptureToImage()
@@ -125,7 +144,7 @@ namespace FunS.Utility.Editor
                 string Size2DInfo = $"{(int)(camera.pixelWidth * renderScale)},{(int)(camera.pixelHeight * renderScale)} => GameView Size * Render Scale";
                 string SizeCubeInfo = $"{(int)imageCubeSize * 2},{(int)imageCubeSize} => Equirectangular 2:1";
 
-                errorString = String.Empty;
+                errorString = ErrorMessage;
                 helpString =
                     $"Capture Info :" +
                     $"\n\tName : {Name}" +
@@ -151,6 +170,7 @@ namespace FunS.Utility.Editor
             RenderTexture.active = rt;
             Texture2D output = new Texture2D(mWidth, mHeight, OutputTempTextureFormat, false);
             output.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+
             output.Apply();
             mCamera.targetTexture = null;
             RenderTexture.active = null;
