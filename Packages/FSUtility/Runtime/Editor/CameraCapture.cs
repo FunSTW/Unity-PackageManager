@@ -34,7 +34,7 @@ namespace FunS.Utility.Editor
         private string Name => $"{name}_{DateTime.Now.ToString(data)}";
         private bool IsGammaSpace => PlayerSettings.colorSpace == ColorSpace.Gamma;
         //For gamma correction color distortion.
-        private TextureFormat OutputTempTextureFormat => IsGammaSpace ? TextureFormat.RGB24 : TextureFormat.RGB48;
+        private TextureFormat OutputTempTextureFormat => IsGammaSpace ? TextureFormat.RGBA32 : TextureFormat.RGBA64;
 
         private string Message;
 
