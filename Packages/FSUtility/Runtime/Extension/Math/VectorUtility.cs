@@ -20,5 +20,23 @@ namespace FunS.Utility
         {
             return Vector3.Dot(forward, dir);
         }
+
+        /// <summary>
+        /// Returns the maximum of vector xyz
+        /// </summary>
+        /// <returns>The maximum value</returns>
+        public static float Max(this Vector3 vector)
+        {
+            return Mathf.Max(Mathf.Max(vector.x, vector.y), vector.z);
+        }
+
+        /// <summary>
+        /// Returns the minimun of vector xyz
+        /// </summary>
+        /// <returns>The minimum value</returns>
+        public static float Min(this Vector3 vector)
+        {
+            return Mathf.Min(Mathf.Min(vector.x, vector.y), vector.z);
+        }
     }
 }
